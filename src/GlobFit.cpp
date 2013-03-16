@@ -30,7 +30,7 @@ GlobFit::~GlobFit(void)
 bool GlobFit::load(const std::string& filename)
 {
     std::string line;
-    std::ifstream fin(filename);
+    std::ifstream fin(filename.c_str());
 
     if (!fin.good()) {
         return false;
@@ -125,7 +125,7 @@ bool GlobFit::load(const std::string& filename)
 
 bool GlobFit::save(const std::string& filename) const
 {
-    std::ofstream fout(filename);
+  std::ofstream fout(filename.c_str());
     if (!fout.good()) {
         return false;
     }

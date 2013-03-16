@@ -3,6 +3,8 @@
 
 #include <osg/Vec4>
 #include <vector>
+#include <cstddef>
+#include <cmath>
 
 class ColorMap {
 public:

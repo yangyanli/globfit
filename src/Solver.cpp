@@ -26,7 +26,8 @@ namespace {
 
 bool GlobFit::createMatlabArraies()
 {
-    matlabEngine = engOpen(NULL);
+    // matlabEngine = engOpen(NULL);
+    matlabEngine = engOpen("matlab -nodesktop");
     if (NULL == matlabEngine) {
         fprintf(stderr, "Could not initialize the engine.\n");
         return false;
@@ -155,17 +156,17 @@ void GlobFit::dumpData(const std::vector<RelationEdge>& vecRelationEdge, const s
 
     std::string path = boost::filesystem::current_path().string();
     path = path+"/matlab/data/"+stageName+"/";
-    std::ofstream constraints(path+"constraints.dat");
-    std::ofstream primitiveType(path+"primitiveType.dat");
-    std::ofstream inputParameters(path+"inputParameters.dat");
-    std::ofstream numVertices(path+"numVertices.dat");
-    std::ofstream coordX(path+"coordX.dat");
-    std::ofstream coordY(path+"coordY.dat");
-    std::ofstream coordZ(path+"coordZ.dat");
-    std::ofstream normalX(path+"normalX.dat");
-    std::ofstream normalY(path+"normalY.dat");
-    std::ofstream normalZ(path+"normalZ.dat");
-    std::ofstream confVertices(path+"confVertices.dat");
+    std::ofstream constraints((path+"constraints.dat").c_str());
+    std::ofstream primitiveType((path+"primitiveType.dat").c_str());
+    std::ofstream inputParameters((path+"inputParameters.dat").c_str());
+    std::ofstream numVertices((path+"numVertices.dat").c_str());
+    std::ofstream coordX((path+"coordX.dat").c_str());
+    std::ofstream coordY((path+"coordY.dat").c_str());
+    std::ofstream coordZ((path+"coordZ.dat").c_str());
+    std::ofstream normalX((path+"normalX.dat").c_str());
+    std::ofstream normalY((path+"normalY.dat").c_str());
+    std::ofstream normalZ((path+"normalZ.dat").c_str());
+    std::ofstream confVertices((path+"confVertices.dat").c_str());
 
     constraints.imbue(loc);
     primitiveType.imbue(loc);
@@ -291,7 +292,7 @@ bool GlobFit::solve(std::vector<RelationEdge>& vecRelationEdge, RelationEdge::Re
     engEvalString(matlabEngine, command.c_str());
 
     matlabOutputBuffer[szOutputBuffer - 1] = '\0';
-    printf_s("%s\n", matlabOutputBuffer);
+    printf("%s\n", matlabOutputBuffer);
     engOutputBuffer(matlabEngine, NULL, 0);
     delete[] matlabOutputBuffer;
 

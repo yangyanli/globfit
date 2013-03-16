@@ -1,6 +1,8 @@
 #ifndef Viewer_H
 #define Viewer_H
 
+#include <cmath>
+
 namespace osg {
     class Node;
 }

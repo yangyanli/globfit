@@ -1,6 +1,8 @@
 #ifndef RelationVertex_H
 #define RelationVertex_H
 
+#include <cstddef>
+
 class RelationVertex
 {
 public:
