@@ -14,7 +14,9 @@ int main(int argc, char *argv[])
   namespace po = boost::program_options;
   po::options_description options("Allowed options");
   options.add_options()
-    ("help", "produce help message")
+    ("help,h", "produce help message")
+    ("verbose,v", "turn on verbose mode")
+    ("intermediate,m", "turn on dump of intermediate results")
     ("input,i", po::value<std::string>(), "input file")
     ("paraOrthThreshold,o", po::value<double>(&paraOrthThreshold)->default_value(10.00, "10.00"), "parallel/orthogonal threshold")
     ("equalAngleThreshold,g", po::value<double>(&equalAngleThreshold)->default_value(10.00, "10.00"), "equal angle threshold")
@@ -33,6 +35,9 @@ int main(int argc, char *argv[])
     system("pause");
     return 1;
   }
+
+  bool verbose = vm.count("verbose");
+  bool intermediate = vm.count("intermediate");
 
   std::vector<osg::Node*> vecViewData;
   for (size_t i = 0; i < 6; ++ i) {
@@ -65,44 +70,62 @@ int main(int argc, char *argv[])
   }
 
   // Orientation Alignment
-  globFit.saveAngles(base+"_angles_before.txt");
+  if(verbose) {
+    globFit.saveAngles(base+"_angles_before.txt");
+  }
   if (!globFit.orientationAlignment(paraOrthThreshold, equalAngleThreshold)) {
     globFit.destoryMatlabArraies();
     system("pause");
     return 1;
   }
   dynamic_cast<osg::Group*>(vecViewData[3])->addChild(globFit.convertPrimitivesToGeometry("Orientation Alignment"));
-  std::string oaFilename = base+"_oa"+ext;
-  globFit.save(oaFilename);
-  globFit.saveAngles(base+"_angles_after.txt");
+  if(verbose) {
+    globFit.saveAngles(base+"_angles_after.txt");
+  }
+  if (intermediate) {
+    std::string oaFilename = base+"_oa"+ext;
+    globFit.save(oaFilename);
+  }
+
 
   // Placement Alignment
-  globFit.saveCoaxialOffsets(base+"_coaxial_offsets_before.txt");
-  globFit.saveCoplannarOffsets(base+"_coplanar_offsets_before.txt");
+  if(verbose) {
+    globFit.saveCoaxialOffsets(base+"_coaxial_offsets_before.txt");
+    globFit.saveCoplannarOffsets(base+"_coplanar_offsets_before.txt");
+  }
   if (!globFit.placementAlignment(coaxialThreshold, coplanarThreshold)) {
     globFit.destoryMatlabArraies();
     system("pause");
     return 1;
   }
   dynamic_cast<osg::Group*>(vecViewData[4])->addChild(globFit.convertPrimitivesToGeometry("Placement Alignment"));
-  std::string paFilename = base+"_pa"+ext;
-  globFit.save(paFilename);
-  globFit.saveCoaxialOffsets(base+"_coaxial_offsets_after.txt");
-  globFit.saveCoplannarOffsets(base+"_coplanar_offsets_after.txt");
+  if(verbose) {
+    globFit.saveCoaxialOffsets(base+"_coaxial_offsets_after.txt");
+    globFit.saveCoplannarOffsets(base+"_coplanar_offsets_after.txt");
+  }
+  if (intermediate) {
+    std::string paFilename = base+"_pa"+ext;
+    globFit.save(paFilename);
+  }
+
 
   // Equality Alignment
-  globFit.saveLengths(base+"_lengths_before.txt");
-  globFit.saveRadiuses(base+"_radiuses_before.txt");
+  if(verbose) {
+    globFit.saveLengths(base+"_lengths_before.txt");
+    globFit.saveRadiuses(base+"_radiuses_before.txt");
+  }
   if (!globFit.equalityAlignment(equalLengthThreshold, equalRadiusThreshold)) {
     globFit.destoryMatlabArraies();
     system("pause");
     return 1;
   }
   dynamic_cast<osg::Group*>(vecViewData[5])->addChild(globFit.convertPrimitivesToGeometry("Equality Alignment"));
+  if(verbose) {
+    globFit.saveLengths(base+"_lengths_after.txt");
+    globFit.saveRadiuses(base+"_radiuses_after.txt");
+  }
   std::string eaFilename = base+"_ea"+ext;
   globFit.save(eaFilename);
-  globFit.saveLengths(base+"_lengths_after.txt");
-  globFit.saveRadiuses(base+"_radiuses_after.txt");
 
   globFit.destoryMatlabArraies();
   system("pause");
