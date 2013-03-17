@@ -67,7 +67,8 @@ include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
 find_package(Matlab  REQUIRED)
 include_directories(${MATLAB_INCLUDE_DIR})
 
-set(lib_incs  include/ColorMap.h
+set(lib_incs  include/CoreExports.h
+              include/ColorMap.h
               include/Cone.h
               include/Cylinder.h
               include/GlobFit.h

@@ -6,6 +6,7 @@
 
 #include "RelationEdge.h"
 #include "Types.h"
+#include "CoreExports.h"
 
 struct  RichPoint;
 class   Primitive;
@@ -14,7 +15,7 @@ namespace osg{
     class Node;
 }
 
-class GlobFit
+class CORE_EXPORTS GlobFit
 {
 public:
     GlobFit(void);
