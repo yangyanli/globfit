@@ -27,15 +27,8 @@ public:
   bool createMatlabArraies();
   void destoryMatlabArraies();
 
-  void saveAngles(const std::string& filename);
   bool orientationAlignment(double paraOrthThreshold, double equalAngleThreshold);
-
-  void saveCoaxialOffsets(const std::string& filename);
-  void saveCoplannarOffsets(const std::string& filename);
   bool placementAlignment(double coaxialThreshold, double coplanarThreshold);
-
-  void saveLengths(const std::string& filename);
-  void saveRadiuses(const std::string& filename);
   bool equalityAlignment(double equalLengthThreshold, double equalRadiusThreshold);
 
   const std::vector<RichPoint*>&  getPointSet() const {return _vecPointSet;}

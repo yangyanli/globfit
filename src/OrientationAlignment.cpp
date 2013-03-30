@@ -7,37 +7,6 @@
 
 #include "GlobFit.h"
 
-void GlobFit::saveAngles(const std::string& filename)
-{
-  std::ofstream fout(filename.c_str());
-  if (!fout.good()) {
-    return;
-  }
-
-  fout.precision(16);
-  for (size_t i = 0, iEnd = _vecPrimitive.size(); i < iEnd; ++ i) {
-    Primitive* p1 = _vecPrimitive[i];
-    Vector normal1;
-    if (!p1->getNormal(normal1)) {
-      continue;
-    }
-
-    for (size_t j = i + 1, jEnd = iEnd; j < jEnd; ++ j) {
-      Primitive* p2 = _vecPrimitive[j];
-      Vector normal2;
-      if (!p2->getNormal(normal2)) {
-        continue;
-      }
-
-      fout << computeAngle(normal1, normal2)*180/M_PI << " ";
-    }
-  }
-
-  fout << std::endl;
-
-  return;
-}
-
 bool GlobFit::paraOrthAlignment(double paraOrthThreshold)
 {
   Graph paraOrthGraph;
