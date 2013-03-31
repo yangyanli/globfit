@@ -156,6 +156,7 @@ void GlobFit::dumpData(const std::vector<RelationEdge>& vecRelationEdge, const s
 
   std::string path = boost::filesystem::current_path().string();
   path = path+"/matlab/data/"+stageName+"/";
+  boost::filesystem::create_directories(path);
   std::ofstream constraints((path+"constraints.dat").c_str());
   std::ofstream primitiveType((path+"primitiveType.dat").c_str());
   std::ofstream inputParameters((path+"inputParameters.dat").c_str());
@@ -242,7 +243,7 @@ void GlobFit::dumpData(const std::vector<RelationEdge>& vecRelationEdge, const s
 bool GlobFit::solve(std::vector<RelationEdge>& vecRelationEdge, RelationEdge::RelationEdgeType currentStage, const std::string& stageName)
 {
   // dump data to file for debugging in matlab
-  // dumpData(vecRelationEdge, stageName);
+  dumpData(vecRelationEdge, stageName);
 
   size_t numPrimitives = _vecPrimitive.size();
   mxArray* inputParameters = mxCreateDoubleMatrix(numPrimitives, Primitive::getNumParameter(), mxREAL);
