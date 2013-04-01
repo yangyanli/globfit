@@ -245,6 +245,28 @@ bool GlobFit::solve(std::vector<RelationEdge>& vecRelationEdge, RelationEdge::Re
   // dump data to file for debugging in matlab
   dumpData(vecRelationEdge, stageName);
 
+  size_t nConstraintNum = vecRelationEdge.size();
+  std::string optimization;
+  if (currentStage < RelationEdge::RET_COAXIAL) {
+    optimization = "OptimizeNormal";
+    std::cout << "Optimize Normal..." << std::endl;
+  } else if (currentStage < RelationEdge::RET_COPLANAR) {
+    optimization = "OptimizePoint";
+    std::cout << "Optimize Point..." << std::endl;
+  } else if (currentStage < RelationEdge::RET_EQUAL_RADIUS) {
+    optimization = "OptimizeDistance";
+    std::cout << "Optimize Distance..." << std::endl;
+  } else {
+    optimization = "OptimizeRadius";
+    std::cout << "Optimize Radius..." << std::endl;
+  }
+
+  if (nConstraintNum == 0)
+  {
+    std::cout << "Empty constraint set." << std::endl;
+    return true;
+  }
+
   size_t numPrimitives = _vecPrimitive.size();
   mxArray* inputParameters = mxCreateDoubleMatrix(numPrimitives, Primitive::getNumParameter(), mxREAL);
   double* pInputParameters = mxGetPr(inputParameters);
@@ -257,7 +279,6 @@ bool GlobFit::solve(std::vector<RelationEdge>& vecRelationEdge, RelationEdge::Re
   }
   engPutVariable(matlabEngine, "inputParameters", inputParameters);
 
-  size_t nConstraintNum = vecRelationEdge.size();
   mxArray* constraints = mxCreateNumericMatrix(nConstraintNum, RelationEdge::getNumParameter(), mxINT32_CLASS, mxREAL);
   int* pConstraints = (int*)mxGetData(constraints);
   for (size_t i = 0; i < nConstraintNum; ++i) {
@@ -275,20 +296,7 @@ bool GlobFit::solve(std::vector<RelationEdge>& vecRelationEdge, RelationEdge::Re
 
   std::string output = "[outputParameters, initialFittingError, exitFittingError, exitFlag]";
   std::string input = "(inputParameters, maxIterNum, numVertices, primitiveType, coordX, coordY, coordZ, normalX, normalY, normalZ, confVertices, constraints);";
-  std::string optimization;
-  if (currentStage < RelationEdge::RET_COAXIAL) {
-    optimization = "OptimizeNormal";
-    std::cout << "Optimize Normal..." << std::endl;
-  } else if (currentStage < RelationEdge::RET_COPLANAR) {
-    optimization = "OptimizePoint";
-    std::cout << "Optimize Point..." << std::endl;
-  } else if (currentStage < RelationEdge::RET_EQUAL_RADIUS) {
-    optimization = "OptimizeDistance";
-    std::cout << "Optimize Distance..." << std::endl;
-  } else {
-    optimization = "OptimizeRadius";
-    std::cout << "Optimize Radius..." << std::endl;
-  }
+
   std::string command = output+"="+optimization+input;
   engEvalString(matlabEngine, command.c_str());
 
